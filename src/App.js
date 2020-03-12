@@ -1,26 +1,61 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import ViewMember from './components/Member/ViewMember';
+import ViewMemberDetail from './components/Member/ViewMemberDetail/ViewMemberIDetail';
+import Home from './components/Home';
 import './App.css';
+import { connect } from 'react-redux';
+import * as courseAction from './State/Action'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import NotFound from './components/NotFound';
+import '@fortawesome/fontawesome-free';
+import Menu from './components/menu/menu'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    }
+  }
+
+  render() {
+
+    const href = window.location.href
+    const route = href.substr(href.lastIndexOf("0/") + 2, href.length);
+
+    return (
+      <Router>
+        <div className="App">
+          {route === "viewmember/detail"  ? <Menu></Menu> : ''}
+          <Switch>
+            <Route path="/" exact component={Home}></Route>
+            <Route path="/viewmember" exact component={ViewMember}></Route>
+            <Route path="/viewmember/detail" component={ViewMemberDetail}></Route>
+            <Route component={NotFound}></Route>
+          </Switch>
+        </div>
+      </Router>
+    );
+  }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    ...state.course
+  }
+};
+
+
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    resetEdit: () => {
+      dispatch(courseAction.resetEdit());
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+
