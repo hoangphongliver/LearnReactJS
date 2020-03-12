@@ -1,3 +1,21 @@
+@mixin max-xxl {
+  @media screen and (max-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin max-xl {
+  @media screen and (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin max-sm {
+  @media screen and (max-width: 768px) {
+    @content;
+  }
+}
+
 .view-member-detail {
   margin: 0 auto;
   margin-top: 100px;
@@ -8,39 +26,71 @@
     margin: 0 auto;
     padding-bottom: 20px;
     border-bottom: 1px solid gray;
+    background-color: darkseagreen;
+    @include max-xl() {
+      flex-direction: column;
+      width: 90%;
+    }
     &__avatar {
+      @include max-xl() {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+      }
       .avatar {
         width: 280px;
         height: 280px;
         border-radius: 50%;
         margin-bottom: 20px;
         overflow: hidden;
+        margin: 25px 0px 20px 25px;
+        border: 3px solid white;
+        @include max-xl() {
+          width: 200px;
+          height: 200px;
+        }
         img {
           width: 100%;
           //   border: 2px solid rosybrown;
         }
       }
       .name {
-        font-size: 25px;
+        font-size: 30px;
         font-weight: bold;
+        color: darkgreen;
       }
     }
     &__info {
       text-align: left;
       margin-left: 300px;
       margin-top: 20px;
+      color: darkgreen;
+      @include max-xl() {
+        margin-left: 0px;
+      }
       .detail {
         display: flex;
         margin-right: 20px;
-        margin-bottom: 10px;
-        font-size: 18px;
+        margin-bottom: 5px;
+        font-size: 17px;
         font-weight: bold;
+        @include max-xl() {
+          font-size: 14px;
+        }
         .label {
           width: 200px;
+          @include max-xl() {
+            width: 50%;
+          }
         }
         .name {
           font-weight: normal;
         }
+      }
+      .desc {
+        margin-top: 40px;
+        padding-right: 50px;
       }
     }
   }
@@ -56,7 +106,12 @@
     flex-wrap: wrap;
     // justify-content: space-between;
     width: 80%;
-    margin: -5px auto;
+    margin: 30px auto;
+    // margin-left: 20px;
+    @include max-xl() {
+      width: 98%;
+      margin-left: 12px;
+    }
     .photo {
       width: 24.3%;
       padding: 5px;
@@ -67,6 +122,12 @@
       margin-right: 8px;
       overflow: hidden;
       z-index: 10;
+      background-color: white;
+      text-align: center;
+      @include max-xl() {
+        width: 47.5%;
+        padding-top: 45%;
+      }
       img {
         width: 100%;
         cursor: pointer;
@@ -76,18 +137,48 @@
       }
       span {
         position: absolute;
-        top: 0px;
-        right: 0px;
         font-size: 17px;
         padding: 1px 10px;
         border-radius: 50%;
         display: none;
+        text-align: center;
+      }
+      .bgr {
+        position: absolute;
+        width: 100%;
+        height: 0;
+        bottom: 0;
+        left: 0;
+        background: black;
+        opacity: 0.5;
+        cursor: pointer;
+        transition: 0.4s;
+      }
+      .title {
+        bottom: 15%;
+        color: white;
       }
       &:hover {
-        span {
+        .btn {
           position: absolute;
           display: block;
           z-index: 200;
+          top: 0px;
+          right: 0px;
+        }
+        .title {
+          display: block;
+          width: 100%;
+          bottom: 15%;
+          z-index: 200;
+          color: white;
+          font-size: 18px;
+          font-weight: bold;
+        }
+        .bgr {
+          z-index: 200;
+          height: 100%;
+          transition: ease 0.5s;
         }
       }
     }
@@ -95,7 +186,11 @@
 }
 
 .modal-dialog {
-  top: 13%;
+  //   top: 13%;
+  min-width: 680px;
+  @include max-xl() {
+    min-width: 100px;
+  }
   .modal-content {
     .view-img-detail {
       position: relative;

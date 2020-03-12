@@ -18,11 +18,16 @@ class Menu extends Component {
         this.props.history.push("/");
     }
 
+    back = () => {
+        this.props.history.push("/viewmember");
+        this.props.resetPhotoList()
+    }
+
     render() {
         return (
             <div className="menu">
                 <div className="menu__logo" onClick={this.goHomePage}>Home</div>
-                <div className="menu__about"></div>
+                <div className="menu__logo menu__about" onClick={this.back}>Back</div>
             </div>
         )
     }
@@ -37,8 +42,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch, props) => {
     return {
-        resetEdit: () => {
-            dispatch(courseAction.resetEdit());
+        resetPhotoList: () => {
+            dispatch(courseAction.resetPhotoList());
         }
     }
 }

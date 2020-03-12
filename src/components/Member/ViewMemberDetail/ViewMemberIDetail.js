@@ -23,14 +23,18 @@ class ViewMemberDetail extends Component {
             src: '',
             currentImage: 1,
             openModalDelete: false,
-            imageID: null
+            imageID: null,
+            memberID: null
         }
     }
 
     componentDidMount() {
-        const memberID = this.props.memberID;
+        const memberID = this.props.match.params.id;
         const courseID = this.props.courseID;
-        this.setState({})
+        this.setState({
+            memberID
+        });
+        this.props.saveMemberID(memberID);
         Service.getMemberByID(courseID, memberID).then(res => {
             const memberDetail = res.data;
             this.props.saveMember(memberDetail);
@@ -107,22 +111,6 @@ class ViewMemberDetail extends Component {
 
     }
 
-    viewPhoto = (imageID) => {
-        this.openModalPhoto();
-        const { photoList } = this.state;
-        this.setState({
-            currentImage: imageID
-        })
-        photoList.forEach((photo, index) => {
-            if (index === imageID) {
-                this.setState({
-                    src: photo.url,
-                    // currentImage: index
-                });
-            }
-        });
-    }
-
     closeModalPhoto = () => {
         this.setState({
             openImage: false
@@ -145,13 +133,29 @@ class ViewMemberDetail extends Component {
 
     onScroll = () => {
         if (window.innerHeight + document.documentElement.scrollTop === document.scrollingElement.scrollHeight) {
-            const memberID = this.props.memberID;
+            const memberID = this.state.memberID;
             const courseID = this.props.courseID;
             this.setState({
                 loadingBarProgress: 0
             })
             this.getAllPhoto(courseID, memberID, 24, 1);
         }
+    }
+
+    viewPhoto = (imageID) => {
+        this.openModalPhoto();
+        const { photoList } = this.state;
+        this.setState({
+            currentImage: imageID
+        })
+        photoList.forEach((photo, index) => {
+            if (index === imageID) {
+                this.setState({
+                    src: photo.url,
+                    // currentImage: index
+                });
+            }
+        });
     }
 
     nextImage = () => {
@@ -200,7 +204,9 @@ class ViewMemberDetail extends Component {
         const list = listImage.map((image, index) => {
             return <div key={index} className="photo">
                 <img src={image.url} alt="" onClick={() => this.viewPhoto(index)} />
+                <div className="bgr" onClick={() => this.viewPhoto(index)}></div>
                 <span className="btn btn-secondary" onClick={() => this.setState({ openModalDelete: true, imageID: image.id })}>x</span>
+                <span className="title" onClick={() => this.viewPhoto(index)}>{image.name}</span>
             </div>
         });
 
@@ -240,6 +246,9 @@ class ViewMemberDetail extends Component {
                         <div className="detail">
                             <div className="label">Phone Number:</div>
                             <div className="name">{memberDetail.phoneNumber}</div>
+                        </div>
+                        <div className="desc">
+                            "URL parameters are parameters whose values are set dynamically in a page’s URL. This allows a route to render the same component while passing that component the dynamic portion of the URL so it can change based off of it."
                         </div>
                     </div>
                 </div>
@@ -281,8 +290,8 @@ class ViewMemberDetail extends Component {
                     <Modal isOpen={this.state.openImage} toggle={this.closeModalPhoto}>
                         <div className="view-img-detail">
                             <img src={this.state.src} alt="" />
-                            <button className="next btn btn-success" disabled={this.state.currentImage === 0} onClick={this.prevImage}>Prev</button>
-                            <button className="prev btn btn-success" disabled={this.state.currentImage === this.state.photoList.length - 1} onClick={this.nextImage}>Next</button>
+                            <button className="next btn btn btn-info" disabled={this.state.currentImage === 0} onClick={this.prevImage}> Prev </button>
+                            <button className="prev btn btn btn-info" disabled={this.state.currentImage === this.state.photoList.length - 1} onClick={this.nextImage}>Next</button>
                         </div>
                     </Modal>
                 </div>
@@ -306,6 +315,9 @@ const mapDispatchToProps = (dispatch, props) => {
         },
         saveListImage: (listImage) => {
             dispatch(courseAction.saveListImage(listImage));
+        },
+        saveMemberID: (id) => {
+            dispatch(courseAction.saveMemberID(id));
         }
     }
 }

@@ -29,11 +29,11 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          {route === "viewmember/detail"  ? <Menu></Menu> : ''}
+          {href.indexOf('viewmember/detail') !== -1 ? <Menu></Menu> : ''}
           <Switch>
             <Route path="/" exact component={Home}></Route>
             <Route path="/viewmember" exact component={ViewMember}></Route>
-            <Route path="/viewmember/detail" component={ViewMemberDetail}></Route>
+            <Route path="/viewmember/detail/:id" component={ViewMemberDetail}></Route>
             <Route component={NotFound}></Route>
           </Switch>
         </div>

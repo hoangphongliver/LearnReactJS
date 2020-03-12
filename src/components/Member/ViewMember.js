@@ -30,7 +30,7 @@ class ViewMember extends Component {
     }
 
     componentDidMount() {
-        this.getAllMember()
+        this.getAllMember();
     }
 
 
@@ -154,7 +154,7 @@ class ViewMember extends Component {
     }
 
     viewMemberInfo = (memberID) => {
-        this.props.history.push('/viewmember/detail');
+        this.props.history.push(`/viewmember/detail/${memberID}`);
         this.props.saveMemberID(Number(memberID));
     }
 

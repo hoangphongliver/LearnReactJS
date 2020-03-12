@@ -4,12 +4,29 @@ body {
     "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #fafafa !important;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+@mixin max-xxl {
+  @media screen and (max-width: 1200px) {
+    @content;
+  }
+}
 
+@mixin max-xl {
+  @media screen and (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin max-sm {
+  @media screen and (max-width: 768px) {
+    @content;
+  }
+}
 $mat-grey: (
   50: #fafafa,
   100: #f5f5f5,
@@ -30,7 +47,9 @@ $mat-grey: (
 .App {
   width: 85%;
   margin: 0 auto;
-
+  @include max-xl() {
+    width: 95%;
+  }
   .home {
     width: 100%;
     margin: 0 auto;
@@ -187,7 +206,7 @@ $mat-grey: (
     }
   }
 
-  .not-found{
+  .not-found {
     font-size: 50px;
     font-weight: bold;
     text-align: center;
@@ -195,7 +214,6 @@ $mat-grey: (
     width: 100%;
   }
 }
-
 
 .show-loading-bar {
   display: flex;

@@ -11,6 +11,7 @@ export const GetAllMember = '[Course] Get All Member';
 export const SaveMemberID = '[Course] Save Member ID';
 export const SaveMember = '[Course] Save Member';
 export const SaveListImage = '[Course] Save List Image';
+export const ResetPhotoList = '[Course] Reset Photo List';
 
 export const editCourse = (payload) => {
     return {
@@ -98,5 +99,11 @@ export const saveListImage = (payload) => {
     return {
         type: SaveListImage,
         payload
+    }
+}
+
+export const resetPhotoList = () => {
+    return {
+        type: ResetPhotoList,
     }
 }

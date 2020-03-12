@@ -113,6 +113,11 @@ const reducer = (state = initState, action) => {
                 ...state,
                 listImage: action.payload
             }
+        case demnoActions.ResetPhotoList:
+            return {
+                ...state,
+                listImage: []
+            }
         default:
             break;
     }
