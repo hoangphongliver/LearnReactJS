@@ -10,6 +10,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import NotFound from './components/NotFound';
 import '@fortawesome/fontawesome-free';
 import Menu from './components/menu/menu'
+import AddMemberByStep from './components/Member/AddMemberByStep/AddMemberByStep';
 
 
 class App extends Component {
@@ -32,8 +33,9 @@ class App extends Component {
           {href.indexOf('viewmember/detail') !== -1 ? <Menu></Menu> : ''}
           <Switch>
             <Route path="/" exact component={Home}></Route>
-            <Route path="/viewmember" exact component={ViewMember}></Route>
-            <Route path="/viewmember/detail/:id" component={ViewMemberDetail}></Route>
+            <Route path="/viewmember/:courseID" exact component={ViewMember}></Route>
+            <Route path="/viewmember/:courseID/detail/:id" component={ViewMemberDetail}></Route>
+            <Route path="/viewmember/:courseID/addmember/:memberID" component={AddMemberByStep}></Route>
             <Route component={NotFound}></Route>
           </Switch>
         </div>

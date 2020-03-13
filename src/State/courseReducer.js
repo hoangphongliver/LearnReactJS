@@ -11,8 +11,8 @@ let initState = {
     searchPhase: '',
     sortBy: '',
     showLoader: false,
-    courseID: 1,
-    memberID: 1,
+    courseID: null,
+    memberID: null,
     memberDetail: {
         memberName: '',
         age: 0,

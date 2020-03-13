@@ -30,11 +30,11 @@ class ViewMemberDetail extends Component {
 
     componentDidMount() {
         const memberID = this.props.match.params.id;
-        const courseID = this.props.courseID;
+        const { courseID } = this.props.match.params;
         this.setState({
             memberID
         });
-        this.props.saveMemberID(memberID);
+        this.props.saveMemberID(Number(memberID));
         Service.getMemberByID(courseID, memberID).then(res => {
             const memberDetail = res.data;
             this.props.saveMember(memberDetail);

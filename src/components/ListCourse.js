@@ -134,7 +134,7 @@ class ListCourse extends Component {
     }
 
     goToViewMember = (id) => {
-        this.props.history.push('/viewmember');
+        this.props.history.push(`/viewmember/${id}`);
         this.props.saveCourseID(Number(id));
     }
 

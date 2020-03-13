@@ -19,7 +19,7 @@ class Menu extends Component {
     }
 
     back = () => {
-        this.props.history.push("/viewmember");
+        this.props.history.push(`/viewmember/${this.props.courseID}`);
         this.props.resetPhotoList()
     }
 

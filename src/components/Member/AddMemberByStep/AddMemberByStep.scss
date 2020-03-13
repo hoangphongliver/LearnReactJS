@@ -1,0 +1,131 @@
+.add-by-step {
+  width: 70%;
+  margin: 0 auto;
+  margin-top: 40px;
+  &__step-menu {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    &--step {
+      display: flex;
+      cursor: pointer;
+      .status {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: darkgray;
+        margin-right: 10px;
+        position: relative;
+        &::before {
+          content: "1";
+          position: absolute;
+          left: 10px;
+          top: -3px;
+          color: white;
+          font-size: 25px;
+        }
+      }
+
+      .status-step1 {
+        &::before {
+          content: "1";
+        }
+      }
+
+      .status-step2 {
+        &::before {
+          content: "2";
+        }
+      }
+
+      .status-step3 {
+        &::before {
+          content: "3";
+        }
+      }
+
+      .status-step4 {
+        &::before {
+          content: "4";
+        }
+      }
+
+      .valid {
+        background: #28a745;
+        &::before {
+          content: "";
+          width: 11px;
+          height: 20px;
+          border: solid white;
+          left: 13px;
+          top: 5px;
+          font-size: 30px;
+          border-width: 0 3px 3px 0;
+          transform: rotate(45deg);
+        }
+      }
+
+      .invalid {
+        background: indianred;
+        &::before {
+          content: "!";
+          left: 13px;
+          top: -6px;
+          font-size: 30px;
+        }
+      }
+
+      .active {
+        background: #28a745;
+      }
+
+      .step-name {
+        font-weight: bold;
+        margin-top: 5px;
+        font-size: 18px;
+      }
+    }
+  }
+  &__step-content {
+    text-align: left;
+
+    .form-group {
+      width: 60%;
+      margin-bottom: 50px;
+    }
+
+    &__step4 {
+      .overview {
+        margin-bottom: 30px;
+        &__detail {
+          display: flex;
+          margin-bottom: 10px;
+          &__info {
+            width: 30%;
+            font-weight: bold;
+          }
+          &__view {
+            width: 60%;
+          }
+        }
+      }
+      .action {
+        display: flex;
+      }
+    }
+  }
+  &__actions {
+    margin-top: 200px;
+    display: flex;
+    justify-content: space-between;
+    .actions {
+      button {
+        margin-right: 80px;
+      }
+    }
+    .btn-success:disabled {
+      background: gray;
+      border-color: gray;
+    }
+  }
+}

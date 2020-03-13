@@ -30,15 +30,15 @@ class ViewMember extends Component {
     }
 
     componentDidMount() {
-        this.getAllMember();
-    }
-
-
-    getAllMember = () => {
-        const courseID = this.props.courseID;
+        const { courseID } = this.props.match.params;
         this.setState({
             courseID
         })
+        this.getAllMember(courseID);
+    }
+
+
+    getAllMember = (courseID) => {
         const memberModel = {
             page: 1,
             limit: 10,
@@ -82,9 +82,9 @@ class ViewMember extends Component {
         this.setState({
             loadingBarProgress: 0
         })
-        const { courseID } = this.state;
+        const { courseID } = this.props.match.params;
         Service.deleteMember(courseID, id).then(res => {
-            this.getAllMember()
+            this.getAllMember(courseID)
         })
     }
 
@@ -125,14 +125,14 @@ class ViewMember extends Component {
             Service.addMember(courseID, member).then(res => {
                 this.closeModal();
                 this.resetForm();
-                this.getAllMember();
+                this.getAllMember(courseID);
             });
         } else {
             const memberID = this.state.getMemberToEdit.id;
             Service.updateMember(courseID, memberID, member).then(res => {
                 this.closeModal();
                 this.resetForm();
-                this.getAllMember();
+                this.getAllMember(courseID);
             });
         }
     }
@@ -154,8 +154,19 @@ class ViewMember extends Component {
     }
 
     viewMemberInfo = (memberID) => {
-        this.props.history.push(`/viewmember/detail/${memberID}`);
+        this.props.history.push(`/viewmember/${this.state.courseID}/detail/${memberID}`);
         this.props.saveMemberID(Number(memberID));
+    }
+
+    addMemberBysStep = () => {
+        this.props.history.push(`/viewmember/${this.state.courseID}/addmember/0`);
+        this.props.saveMemberID(null);
+    }
+
+    onEditByStep = (member) => {
+        this.props.history.push(`/viewmember/${this.state.courseID}/addmember/${member.id}`);
+        this.props.saveMemberID(Number(member.id));
+        this.props.saveMember(member, this.state.courseID);
     }
 
 
@@ -175,7 +186,7 @@ class ViewMember extends Component {
                     </div>
                 </td>
 
-                <td style={{ width: "12%" }} onClick={() => this.viewMemberInfo(member.id)}>
+                <td style={{ width: "14%" }} onClick={() => this.viewMemberInfo(member.id)}>
                     <div className="show-loading-bar">
                         {member.isLoadingItem ? (
                             <div className="loading-bar"></div>
@@ -186,7 +197,7 @@ class ViewMember extends Component {
                         }
                     </div>
                 </td>
-                <td style={{ width: "10%" }} onClick={() => this.viewMemberInfo(member.id)}>
+                <td style={{ width: "3%" }} onClick={() => this.viewMemberInfo(member.id)}>
                     <div className="show-loading-bar">
                         {member.isLoadingItem ? (
                             <div className="loading-bar"></div>
@@ -246,9 +257,10 @@ class ViewMember extends Component {
                     </div>
                 </td>
 
-                <td style={{ width: "10%" }}>
+                <td style={{ width: "15%" }}>
                     <div className={member.isLoadingItem ? 'opc0' : ''}>
                         <button className="btn btn-info" onClick={() => this.onEdit(member)}>Edit</button>
+                        <button className="btn btn-info" onClick={() => this.onEditByStep(member)}>Edit By</button>
                         <button className="btn btn-info" onClick={() => this.onDelete(member.id)}>Delete</button>
                     </div>
                 </td>
@@ -264,6 +276,7 @@ class ViewMember extends Component {
                 />
                 <div className="add-member">
                     <button onClick={this.openModal} className="btn btn-success">Add Member</button>
+                    <button onClick={this.addMemberBysStep} className="btn btn-success">Add Member By Step</button>
                     <Modal isOpen={this.state.open} toggle={this.closeModal}>
                         <ModalHeader>Add Member Form
                         <div className="btn btn-primary" onClick={() => this.setState({ open: false })}>x</div>
@@ -357,7 +370,12 @@ const mapDispatchToProps = (dispatch, props) => {
         },
         saveMemberID: (memberID) => {
             dispatch(courseAction.saveMemberID(memberID));
-        }
+        },
+        saveMember: (memberID, courseID) => {
+            dispatch(courseAction.saveMember(memberID));
+            dispatch(courseAction.saveCourseID(courseID))
+        },
+
     }
 }
 
