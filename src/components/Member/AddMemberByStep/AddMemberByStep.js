@@ -206,6 +206,30 @@ class AddMemberByStep extends Component {
         }
     }
 
+    prevStep = () => {
+        let prevStep = this.state.currentStep;
+        prevStep--;
+        if (prevStep < 1) {
+            prevStep = 1;
+        };
+        this.setState({
+            currentStep: prevStep
+        });
+        this.goToStep(prevStep)
+    }
+
+    nextStep = () => {
+        let nextStep = this.state.currentStep;
+        nextStep++;
+        if (nextStep > 4) {
+            nextStep = 4;
+        };
+        this.setState({
+            currentStep: nextStep
+        });
+        this.goToStep(nextStep)
+    }
+
 
 
     render() {
@@ -326,15 +350,14 @@ class AddMemberByStep extends Component {
                 </div>
                 <div className="add-by-step__actions">
                     <div className="actions">
-                        <button className="btn btn-success" disabled={this.state.currentStep === 1}>Prev Step</button>
-                        <button className="btn btn-success" disabled={this.state.currentStep === 4}> Next Step</button>
+                        <button className="btn btn-success" onClick={this.prevStep} disabled={this.state.currentStep === 1}>Prev Step</button>
+                        <button className="btn btn-success" onClick={this.nextStep} disabled={this.state.currentStep === 4}> Next Step</button>
                     </div>
                     <div className="add">
                         {this.state.currentStep === 4 ? <button className="btn btn-success" disabled={!this.validateAllStep()} onClick={this.omAddMember}>{this.props.memberID ? 'Update Member' : 'Add Member'}</button> : ''}
                     </div>
                 </div>
             </div>
-
         )
     }
 }

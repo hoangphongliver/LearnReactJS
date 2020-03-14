@@ -7,6 +7,7 @@ import Service from '../Service/service'
 import LoadingBar from 'react-top-loading-bar';
 import { withRouter } from "react-router-dom";
 import { compose } from 'redux';
+import { Modal, ModalHeader } from 'reactstrap';
 
 
 
@@ -21,7 +22,9 @@ class ListCourse extends Component {
             totalPage: 0,
             loadingBarProgress: 0,
             searchPhase: '',
-            sortBy: 'lastUpdated'
+            sortBy: 'lastUpdated',
+            openModalDelete: false,
+            courseID: null
         }
     }
 
@@ -61,19 +64,21 @@ class ListCourse extends Component {
             this.setState({
                 loadingBarProgress: 100
             })
-        }, 200);
+        }, 5);
     }
 
 
-    onDelete = (id) => {
+    onDelete = () => {
+        const { courseID } = this.state;
         this.loadingItem()
         this.setState({
             currentPage: 1,
             loadingBarProgress: 0
         })
-        Service.deleteCourse(id).then(res => {
+        Service.deleteCourse(courseID).then(res => {
             this.setState({ loadingBarProgress: 100 });
             this.getCourse(1, 10, this.state.sortBy, this.state.searchPhase, '', '');
+            this.closeModalDelete()
         });
     }
 
@@ -113,6 +118,12 @@ class ListCourse extends Component {
             this.props.onUpdateCourse(res.data);
             this.setState({ loadingBarProgress: 100 })
         });
+    }
+
+    closeModalDelete = () => {
+        this.setState({
+            openModalDelete: false
+        })
     }
 
     loadingItem() {
@@ -214,7 +225,11 @@ class ListCourse extends Component {
                 <td style={{ width: "15%" }}>
                     <div className={list.isLoadingItem ? 'opc0' : ''}>
                         <button className="btn btn-info" onClick={() => this.onEdit(list)}>Edit</button>
-                        <button className="btn btn-info" onClick={() => this.onDelete(list.id)}>Delete</button>
+                        <button className="btn btn-info" onClick={() => this.setState({
+                            openModalDelete: true,
+                            courseID: list.id,
+                            courseName: list.courseName
+                        })}>Delete</button>
                     </div>
                 </td>
             </tr>
@@ -253,6 +268,16 @@ class ListCourse extends Component {
                     </thead>
                     <tbody>
                         {couserList}
+                        <Modal isOpen={this.state.openModalDelete} toggle={this.closeModalDelete} >
+                            <div className="modal-delete">
+                                <div>
+                                    Do You Want To Delete "{this.state.courseName}"?
+                                </div>
+                                <div>
+                                    <button className="btn btn-success" onClick={() => this.onDelete()}>Confirm</button>
+                                </div>
+                            </div>
+                        </Modal>
                     </tbody>
                 </table>
                 <div className="paging">

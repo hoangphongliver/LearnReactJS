@@ -10,13 +10,24 @@ class Menu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isShowForm: false
+            isShowForm: false,
+            courseID: null
         }
     }
 
     goHomePage = () => {
         this.props.history.push("/");
     }
+
+    componentDidMount() {
+        const  memberID  = this.props.match.params;
+        // this.setState({
+        //     courseID
+        // });
+        console.log(memberID);
+        
+    }
+
 
     back = () => {
         this.props.history.push(`/viewmember/${this.props.courseID}`);

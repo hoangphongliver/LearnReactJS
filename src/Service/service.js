@@ -126,6 +126,16 @@ const Service = {
         });
     }
 
+    ,
+
+    updateImage(courseID, memberID, imageID, param) {
+        return axios({
+            method: 'PUT',
+            url: `http://5e61c14e6f5c7900149bc641.mockapi.io/api/v1/courses/${courseID}/member/${memberID}/images/${imageID}`,
+            data: param
+        });
+    }
+
 }
 
 export default Service;

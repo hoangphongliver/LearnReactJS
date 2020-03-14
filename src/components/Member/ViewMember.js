@@ -25,7 +25,9 @@ class ViewMember extends Component {
             phoneNumber: '',
             open: false,
             courseID: null,
-            getMemberToEdit: null
+            memberID: null,
+            getMemberToEdit: null,
+            openModalDelete: false
         }
     }
 
@@ -78,13 +80,18 @@ class ViewMember extends Component {
         this.openModel();
     }
 
-    onDelete = (id) => {
+    onDelete = () => {
+        const { memberID } = this.state;
         this.setState({
             loadingBarProgress: 0
         })
         const { courseID } = this.props.match.params;
-        Service.deleteMember(courseID, id).then(res => {
-            this.getAllMember(courseID)
+        Service.deleteMember(courseID, memberID).then(res => {
+            this.getAllMember(courseID);
+            this.closeModalDelete();
+            this.setState({
+                loadingBarProgress: 100
+            })
         })
     }
 
@@ -167,6 +174,12 @@ class ViewMember extends Component {
         this.props.history.push(`/viewmember/${this.state.courseID}/addmember/${member.id}`);
         this.props.saveMemberID(Number(member.id));
         this.props.saveMember(member, this.state.courseID);
+    }
+
+    closeModalDelete = () => {
+        this.setState({
+            openModalDelete: false
+        })
     }
 
 
@@ -261,7 +274,12 @@ class ViewMember extends Component {
                     <div className={member.isLoadingItem ? 'opc0' : ''}>
                         <button className="btn btn-info" onClick={() => this.onEdit(member)}>Edit</button>
                         <button className="btn btn-info" onClick={() => this.onEditByStep(member)}>Edit By</button>
-                        <button className="btn btn-info" onClick={() => this.onDelete(member.id)}>Delete</button>
+                        <button className="btn btn-info" onClick={() => this.setState({
+                            openModalDelete: true,
+                            memberID: member.id,
+                            memberName: member.memberName
+                        })}>Delete
+                        </button>
                     </div>
                 </td>
             </tr>
@@ -339,6 +357,16 @@ class ViewMember extends Component {
                     </thead>
                     <tbody>
                         {memberList}
+                        <Modal isOpen={this.state.openModalDelete} toggle={this.closeModalDelete} >
+                            <div className="modal-delete">
+                                <div>
+                                    Do You Want To Delete "{this.state.memberName}" ?
+                                </div>
+                                <div>
+                                    <button className="btn btn-success" onClick={() => this.onDelete()}>Confirm</button>
+                                </div>
+                            </div>
+                        </Modal>
                     </tbody>
                 </table>
                 {/* <div className="paging">

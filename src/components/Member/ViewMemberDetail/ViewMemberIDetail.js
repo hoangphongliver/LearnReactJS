@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import Service from '../../../Service/service'
 import LoadingBar from 'react-top-loading-bar';
 import './ViewMemberIDetail.scss';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import Popup from "reactjs-popup";
-
+import { Modal, ModalHeader } from 'reactstrap';
 
 class ViewMemberDetail extends Component {
 
@@ -24,7 +22,8 @@ class ViewMemberDetail extends Component {
             currentImage: 1,
             openModalDelete: false,
             imageID: null,
-            memberID: null
+            memberID: null,
+            getImageToEdit: null
         }
     }
 
@@ -59,7 +58,8 @@ class ViewMemberDetail extends Component {
 
     closeModal = () => {
         this.setState({
-            open: false
+            open: false,
+            getImageToEdit: null
         })
     }
 
@@ -68,8 +68,8 @@ class ViewMemberDetail extends Component {
     }
 
     deleteImage = () => {
-        const memberID = this.props.memberID;
-        const courseID = this.props.courseID;
+        const memberID = this.props.match.params.id;
+        const { courseID } = this.props.match.params;
         const imageID = this.state.imageID
         this.setState({
             loadingBarProgress: 0
@@ -92,22 +92,34 @@ class ViewMemberDetail extends Component {
     onSubmit = (e) => {
         e.preventDefault()
         const memberID = this.props.memberID;
-        const courseID = this.props.courseID;
+        const { courseID } = this.props.match.params;
+        const { imageID } = this.state
         const imageModel = {
             url: this.state.url,
             name: this.state.name
         }
         this.setState({
             loadingBarProgress: 0
-        })
-        Service.addImage(courseID, memberID, imageModel).then(res => {
-            this.setState({
-                loadingBarProgress: 100
+        });
+        if (!this.state.getImageToEdit) {
+            Service.addImage(courseID, memberID, imageModel).then(res => {
+                this.setState({
+                    loadingBarProgress: 100
+                });
+                this.getAllPhoto(courseID, memberID, 12, 1);
+                this.closeModal();
+                this.reserForm()
+            })
+        } else {
+            Service.updateImage(courseID, memberID, imageID, imageModel).then(res => {
+                this.setState({
+                    loadingBarProgress: 100
+                });
+                this.getAllPhoto(courseID, memberID, 12, 1);
+                this.closeModal();
+                this.reserForm();
             });
-            this.getAllPhoto(courseID, memberID, 12, 1);
-            this.closeModal();
-            this.reserForm()
-        })
+        }
 
     }
 
@@ -134,7 +146,7 @@ class ViewMemberDetail extends Component {
     onScroll = () => {
         if (window.innerHeight + document.documentElement.scrollTop === document.scrollingElement.scrollHeight) {
             const memberID = this.state.memberID;
-            const courseID = this.props.courseID;
+            const { courseID } = this.props.match.params;
             this.setState({
                 loadingBarProgress: 0
             })
@@ -151,8 +163,7 @@ class ViewMemberDetail extends Component {
         photoList.forEach((photo, index) => {
             if (index === imageID) {
                 this.setState({
-                    src: photo.url,
-                    // currentImage: index
+                    src: photo.url
                 });
             }
         });
@@ -188,6 +199,18 @@ class ViewMemberDetail extends Component {
         });
     }
 
+
+    editImage = (image) => {
+        this.setState({
+            open: true,
+            url: image.url,
+            name: image.name,
+            imageID: image.id,
+            getImageToEdit: image
+        })
+    }
+
+
     reserForm() {
         this.setState({
             url: '',
@@ -206,6 +229,7 @@ class ViewMemberDetail extends Component {
                 <img src={image.url} alt="" onClick={() => this.viewPhoto(index)} />
                 <div className="bgr" onClick={() => this.viewPhoto(index)}></div>
                 <span className="btn btn-secondary" onClick={() => this.setState({ openModalDelete: true, imageID: image.id })}>x</span>
+                <span className="btn btn-secondary edit" onClick={() => this.editImage(image)}>!</span>
                 <span className="title" onClick={() => this.viewPhoto(index)}>{image.name}</span>
             </div>
         });
@@ -269,7 +293,7 @@ class ViewMemberDetail extends Component {
                                     <input type="text" name="url" className="form-control" value={this.state.url} onChange={(e) => this.handleChange(e)} placeholder="Enter Image Url" />
                                 </div>
                                 <div className="btn">
-                                    <button type="submit" className="btn btn-primary">Add Photo</button>
+                                    <button type="submit" className="btn btn-primary">{this.state.getImageToEdit ? 'Edit Photo' : 'Add Photo'}</button>
                                 </div>
                             </form>
                         </div>
