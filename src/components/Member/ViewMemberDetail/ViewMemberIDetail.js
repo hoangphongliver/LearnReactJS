@@ -5,6 +5,8 @@ import Service from '../../../Service/service'
 import LoadingBar from 'react-top-loading-bar';
 import './ViewMemberIDetail.scss';
 import { Modal, ModalHeader } from 'reactstrap';
+import { FaAngleLeft, FaAngleRight, FaExclamation, FaTimes, FaPencilAlt } from 'react-icons/fa';
+import Tooltip from '@material-ui/core/Tooltip';
 
 class ViewMemberDetail extends Component {
 
@@ -23,7 +25,7 @@ class ViewMemberDetail extends Component {
             openModalDelete: false,
             imageID: null,
             memberID: null,
-            getImageToEdit: null
+            getImageToEdit: null,
         }
     }
 
@@ -34,6 +36,7 @@ class ViewMemberDetail extends Component {
             memberID
         });
         this.props.saveMemberID(Number(memberID));
+        this.props.saveCourseID(Number(courseID));
         Service.getMemberByID(courseID, memberID).then(res => {
             const memberDetail = res.data;
             this.props.saveMember(memberDetail);
@@ -144,14 +147,16 @@ class ViewMemberDetail extends Component {
     }
 
     onScroll = () => {
-        if (window.innerHeight + document.documentElement.scrollTop === document.scrollingElement.scrollHeight) {
+        if (window.innerHeight + document.documentElement.scrollTop >= document.scrollingElement.scrollHeight) {
             const memberID = this.state.memberID;
             const { courseID } = this.props.match.params;
             this.setState({
                 loadingBarProgress: 0
             })
             this.getAllPhoto(courseID, memberID, 24, 1);
-        }
+        };
+        console.log(window.innerHeight, document.documentElement.scrollTop, document.scrollingElement.scrollHeight);
+
     }
 
     viewPhoto = (imageID) => {
@@ -228,8 +233,13 @@ class ViewMemberDetail extends Component {
             return <div key={index} className="photo">
                 <img src={image.url} alt="" onClick={() => this.viewPhoto(index)} />
                 <div className="bgr" onClick={() => this.viewPhoto(index)}></div>
-                <span className="btn btn-secondary" onClick={() => this.setState({ openModalDelete: true, imageID: image.id })}>x</span>
-                <span className="btn btn-secondary edit" onClick={() => this.editImage(image)}>!</span>
+                <Tooltip title="Edit Member" placement="top">
+                    <span className="btn btn-info" onClick={() => this.setState({ openModalDelete: true, imageID: image.id })}><FaTimes /></span>
+                </Tooltip>
+                <Tooltip title="Edit Member" placement="top">
+                    <span className="btn btn-info edit" onClick={() => this.editImage(image)}><FaPencilAlt /></span>
+                </Tooltip>
+
                 <span className="title" onClick={() => this.viewPhoto(index)}>{image.name}</span>
             </div>
         });
@@ -237,13 +247,15 @@ class ViewMemberDetail extends Component {
 
         return (
             <div className="view-member-detail">
+
                 <LoadingBar
                     progress={this.state.loadingBarProgress}
                     height={5}
                     color='#007bff'
                     onRef={ref => (this.LoadingBar = ref)}
                 />
-                <div className="member-detail">
+
+                <div className="member-detail" >
                     <div className="member-detail__avatar">
                         <div className="avatar">
                             <img src={memberDetail.avatar} alt="123" />
@@ -314,8 +326,9 @@ class ViewMemberDetail extends Component {
                     <Modal isOpen={this.state.openImage} toggle={this.closeModalPhoto}>
                         <div className="view-img-detail">
                             <img src={this.state.src} alt="" />
-                            <button className="next btn btn btn-info" disabled={this.state.currentImage === 0} onClick={this.prevImage}> Prev </button>
-                            <button className="prev btn btn btn-info" disabled={this.state.currentImage === this.state.photoList.length - 1} onClick={this.nextImage}>Next</button>
+                            <i className="fas fa-angle-left"></i>
+                            <button className="next btn btn btn-info" disabled={this.state.currentImage === 0} onClick={this.prevImage}> <FaAngleLeft /> </button>
+                            <button className="prev btn btn btn-info" disabled={this.state.currentImage === this.state.photoList.length - 1} onClick={this.nextImage}><FaAngleRight /></button>
                         </div>
                     </Modal>
                 </div>
@@ -340,8 +353,11 @@ const mapDispatchToProps = (dispatch, props) => {
         saveListImage: (listImage) => {
             dispatch(courseAction.saveListImage(listImage));
         },
-        saveMemberID: (id) => {
-            dispatch(courseAction.saveMemberID(id));
+        saveMemberID: (memberID) => {
+            dispatch(courseAction.saveMemberID(memberID));
+        },
+        saveCourseID: (courseID) => {
+            dispatch(courseAction.saveCourseID(courseID));
         }
     }
 }

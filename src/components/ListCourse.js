@@ -7,7 +7,9 @@ import Service from '../Service/service'
 import LoadingBar from 'react-top-loading-bar';
 import { withRouter } from "react-router-dom";
 import { compose } from 'redux';
-import { Modal, ModalHeader } from 'reactstrap';
+import { Modal } from 'reactstrap';
+import { FaEdit, FaTrash, FaForward, FaBackward } from 'react-icons/fa';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 
@@ -18,19 +20,17 @@ class ListCourse extends Component {
         this.state = {
             data: null,
             currentPage: 1,
-            listPage: [1, 2, 3, 4, 5, 6, 7],
+            listPage: [1],
             totalPage: 0,
             loadingBarProgress: 0,
-            searchPhase: '',
-            sortBy: 'lastUpdated',
             openModalDelete: false,
             courseID: null
         }
     }
 
     componentDidMount() {
-        const sortBy = this.state.sortBy;
-        const searchPhase = this.state.searchPhase
+        const sortBy = this.props.sortBy ? this.props.sortBy : 'lastUpdated';
+        const { searchPhase } = this.props;
         this.getCourse(1, 10, sortBy, searchPhase, '', '');
     }
 
@@ -40,19 +40,6 @@ class ListCourse extends Component {
             this.props.onUpdateCourse(res.data);
             this.setState({ loadingBarProgress: 100 });
         });
-    }
-
-    componentWillReceiveProps(props) {
-        if (props.searchPhase) {
-            this.setState({
-                searchPhase: props.searchPhase
-            })
-        }
-        if (props.sortBy) {
-            this.setState({
-                sortBy: props.sortBy,
-            })
-        }
     }
 
     onEdit = (item) => {
@@ -70,6 +57,8 @@ class ListCourse extends Component {
 
     onDelete = () => {
         const { courseID } = this.state;
+        const sortBy = this.props.sortBy ? this.props.sortBy : 'lastUpdated';
+        const { searchPhase } = this.props;
         this.loadingItem()
         this.setState({
             currentPage: 1,
@@ -77,7 +66,7 @@ class ListCourse extends Component {
         })
         Service.deleteCourse(courseID).then(res => {
             this.setState({ loadingBarProgress: 100 });
-            this.getCourse(1, 10, this.state.sortBy, this.state.searchPhase, '', '');
+            this.getCourse(1, 10, sortBy, searchPhase, '', '');
             this.closeModalDelete()
         });
     }
@@ -95,8 +84,8 @@ class ListCourse extends Component {
             currentPage: page,
             loadingBarProgress: 0
         });
-        const sortBy = this.state.sortBy;
-        const searchPhase = this.state.searchPhase
+        const sortBy = this.props.sortBy ? this.props.sortBy : 'lastUpdated';
+        const { searchPhase } = this.props;
         Service.getAllCousse(page, 10, sortBy, searchPhase, '', '').then(res => {
             this.props.onUpdateCourse(res.data);
             this.setState({ loadingBarProgress: 100 })
@@ -112,8 +101,8 @@ class ListCourse extends Component {
             currentPage: page,
             loadingBarProgress: 0
         });
-        const sortBy = this.state.sortBy;
-        const searchPhase = this.state.searchPhase
+        const sortBy = this.props.sortBy ? this.props.sortBy : 'lastUpdated';
+        const { searchPhase } = this.props;
         Service.getAllCousse(page, 10, sortBy, searchPhase, '', '').then(res => {
             this.props.onUpdateCourse(res.data);
             this.setState({ loadingBarProgress: 100 })
@@ -136,8 +125,8 @@ class ListCourse extends Component {
             currentPage: page,
             loadingBarProgress: 0
         });
-        const sortBy = this.state.sortBy;
-        const searchPhase = this.state.searchPhase
+        const sortBy = this.props.sortBy ? this.props.sortBy : 'lastUpdated';
+        const { searchPhase } = this.props;
         Service.getAllCousse(page, 10, sortBy, searchPhase, '', '').then(res => {
             this.props.onUpdateCourse(res.data);
             this.setState({ loadingBarProgress: 100 })
@@ -187,17 +176,6 @@ class ListCourse extends Component {
                         }
                     </div>
                 </td>
-                <td style={{ width: "10%" }} onClick={() => this.goToViewMember(list.id)}>
-                    <div className="show-loading-bar">
-                        {list.isLoadingItem ? (
-                            <div className="loading-bar"></div>
-                        )
-                            : (
-                                <div>{list.time}</div>
-                            )
-                        }
-                    </div>
-                </td>
 
                 <td style={{ width: "15%" }} onClick={() => this.goToViewMember(list.id)}>
                     <div className="show-loading-bar">
@@ -223,13 +201,17 @@ class ListCourse extends Component {
                     </div>
                 </td>
                 <td style={{ width: "15%" }}>
-                    <div className={list.isLoadingItem ? 'opc0' : ''}>
-                        <button className="btn btn-info" onClick={() => this.onEdit(list)}>Edit</button>
-                        <button className="btn btn-info" onClick={() => this.setState({
-                            openModalDelete: true,
-                            courseID: list.id,
-                            courseName: list.courseName
-                        })}>Delete</button>
+                    <div className={`${list.isLoadingItem ? 'opc0' : ''}`}>
+                        <Tooltip title="Edit Group" placement="top">
+                            <button className="btn btn-info" onClick={() => this.onEdit(list)}><FaEdit /></button>
+                        </Tooltip>
+                        <Tooltip title="Delete Group" placement="top">
+                            <button className="btn btn-info" data-toggle="tooltip" data-placement="top" title="Tooltip on top" onClick={() => this.setState({
+                                openModalDelete: true,
+                                courseID: list.id,
+                                courseName: list.courseName
+                            })}><FaTrash /></button>
+                        </Tooltip>
                     </div>
                 </td>
             </tr>
@@ -248,19 +230,18 @@ class ListCourse extends Component {
                 />
                 <div className="actions">
                     <div className="actions__search">
-                        <Search searchPhase={this.onSearch}></Search>
+                        <Search></Search>
                     </div>
                     <div className="actions__sort">
-                        <Sort sortOption={this.onSort}></Sort>
+                        <Sort></Sort>
                     </div>
                 </div>
                 <table className="table table-hover">
                     <thead className="thead-dark">
                         <tr>
                             <th scope="col">ID</th>
-                            <th scope="col">Cousrse Name</th>
+                            <th scope="col">Group Name</th>
                             <th scope="col">No. Member</th>
-                            <th scope="col">Time</th>
                             <th scope="col">Last Updated</th>
                             <th scope="col">Description</th>
                             <th scope="col" style={{ width: "15%" }}>Actions</th>
@@ -282,11 +263,11 @@ class ListCourse extends Component {
                 </table>
                 <div className="paging">
                     <ul>
-                        <button className="btn btn-primary change-page" disabled={this.state.currentPage === 1} onClick={this.prevPage}> Prev </button>
+                        <button className="btn btn-primary change-page" disabled={this.state.currentPage === 1} onClick={this.prevPage}> <FaBackward /> </button>
                         <div className="number-page">
                             {listPage}
                         </div>
-                        <button className="btn btn-primary change-page" disabled={this.props.data.length < 10} onClick={this.nextList}> Next </button>
+                        <button className="btn btn-primary change-page" disabled={this.props.data.length < 10} onClick={this.nextList}> <FaForward /> </button>
                     </ul>
                 </div>
             </div>

@@ -12,7 +12,6 @@ import '@fortawesome/fontawesome-free';
 import Menu from './components/menu/menu'
 import AddMemberByStep from './components/Member/AddMemberByStep/AddMemberByStep';
 
-
 class App extends Component {
 
   constructor(props) {
@@ -24,13 +23,12 @@ class App extends Component {
 
   render() {
 
-    const href = window.location.href
-    const route = href.substr(href.lastIndexOf("0/") + 2, href.length);
+    const href = window.location.href;
 
     return (
       <Router>
         <div className="App">
-          {href.indexOf('/detail') !== -1 ? <Menu></Menu> : ''}
+          {href.indexOf('/detail') !== -1 || href.indexOf('/addmember') !== -1 ? <Menu></Menu> : ''}
           <Switch>
             <Route path="/" exact component={Home}></Route>
             <Route path="/viewmember/:courseID" exact component={ViewMember}></Route>

@@ -6,7 +6,9 @@ import LoadingBar from 'react-top-loading-bar';
 import './ViewMember.scss';
 import { compose } from 'redux';
 import { withRouter } from "react-router-dom";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader } from 'reactstrap';
+import { FaEdit, FaArrowLeft, FaTrash, FaPlus } from 'react-icons/fa';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 
@@ -24,7 +26,6 @@ class ViewMember extends Component {
             avatar: '',
             phoneNumber: '',
             open: false,
-            courseID: null,
             memberID: null,
             getMemberToEdit: null,
             openModalDelete: false
@@ -35,7 +36,8 @@ class ViewMember extends Component {
         const { courseID } = this.props.match.params;
         this.setState({
             courseID
-        })
+        });
+        this.props.saveMember(null, Number(courseID));
         this.getAllMember(courseID);
     }
 
@@ -161,19 +163,19 @@ class ViewMember extends Component {
     }
 
     viewMemberInfo = (memberID) => {
-        this.props.history.push(`/viewmember/${this.state.courseID}/detail/${memberID}`);
+        this.props.history.push(`/viewmember/${this.props.courseID}/detail/${memberID}`);
         this.props.saveMemberID(Number(memberID));
     }
 
     addMemberBysStep = () => {
-        this.props.history.push(`/viewmember/${this.state.courseID}/addmember/0`);
+        this.props.history.push(`/viewmember/${this.props.courseID}/addmember/0`);
         this.props.saveMemberID(null);
     }
 
     onEditByStep = (member) => {
-        this.props.history.push(`/viewmember/${this.state.courseID}/addmember/${member.id}`);
+        this.props.history.push(`/viewmember/${this.props.courseID}/addmember/${member.id}`);
         this.props.saveMemberID(Number(member.id));
-        this.props.saveMember(member, this.state.courseID);
+        this.props.saveMember(member, Number(this.props.courseID));
     }
 
     closeModalDelete = () => {
@@ -246,7 +248,7 @@ class ViewMember extends Component {
                     </div>
                 </td>
 
-                <td style={{ width: "10%" }} onClick={() => this.viewMemberInfo(member.id)}>
+                <td style={{ width: "15%" }} onClick={() => this.viewMemberInfo(member.id)}>
                     <div className="show-loading-bar">
                         {member.isLoadingItem ? (
                             <div className="loading-bar"></div>
@@ -270,16 +272,25 @@ class ViewMember extends Component {
                     </div>
                 </td>
 
-                <td style={{ width: "15%" }}>
+                <td style={{ width: "10%" }}>
                     <div className={member.isLoadingItem ? 'opc0' : ''}>
-                        <button className="btn btn-info" onClick={() => this.onEdit(member)}>Edit</button>
-                        <button className="btn btn-info" onClick={() => this.onEditByStep(member)}>Edit By</button>
-                        <button className="btn btn-info" onClick={() => this.setState({
-                            openModalDelete: true,
-                            memberID: member.id,
-                            memberName: member.memberName
-                        })}>Delete
-                        </button>
+                        <Tooltip title="Edit Member" placement="top">
+                            <button className="btn btn-info" onClick={() => this.onEdit(member)}><FaEdit /></button>
+                        </Tooltip>
+                        <Tooltip title="Edit Member By Step" placement="top">
+                            <button className="btn btn-info" onClick={() => this.onEditByStep(member)}><FaEdit /></button>
+                        </Tooltip>
+                        <Tooltip title="Delete Member" placement="top">
+                            <button className="btn btn-info" onClick={() => this.setState({
+                                openModalDelete: true,
+                                memberID: member.id,
+                                memberName: member.memberName
+                            })}><FaTrash />
+                            </button>
+                        </Tooltip>
+
+
+
                     </div>
                 </td>
             </tr>
@@ -293,8 +304,12 @@ class ViewMember extends Component {
                     onRef={ref => (this.LoadingBar = ref)}
                 />
                 <div className="add-member">
-                    <button onClick={this.openModal} className="btn btn-success">Add Member</button>
-                    <button onClick={this.addMemberBysStep} className="btn btn-success">Add Member By Step</button>
+                    <Tooltip title="Add Member" placement="top">
+                    <button onClick={this.openModal} className="btn btn-success"><FaPlus /></button>
+                    </Tooltip>
+                    <Tooltip title="Add Member By Step" placement="top">
+                    <button onClick={this.addMemberBysStep} className="btn btn-success"><FaPlus /></button>
+                    </Tooltip>
                     <Modal isOpen={this.state.open} toggle={this.closeModal}>
                         <ModalHeader>Add Member Form
                         <div className="btn btn-primary" onClick={() => this.setState({ open: false })}>x</div>
@@ -340,7 +355,9 @@ class ViewMember extends Component {
                     </Modal>
                 </div>
                 <div className="add-member fl">
-                    <button onClick={this.backToHome} className="btn btn-info">Back To Home</button>
+                    <Tooltip title="Edit Member" placement="top">
+                        <button onClick={this.backToHome} className="btn btn-info"><FaArrowLeft /></button>
+                    </Tooltip>
                 </div>
                 <table className="table table-hover">
                     <thead className="thead-dark">

@@ -128,9 +128,9 @@ class Add extends Component {
                     color='#007bff'
                     onRef={ref => (this.LoadingBar = ref)}
                 />
-                <h1>Add Course</h1>
+                <h1>Add Group</h1>
                 <div className="form-group">
-                    <input type="text" name="courseName" value={this.state.courseName} onChange={this.handleChange} className="form-control" id="exampleInputEmail1" placeholder="Course Name" />
+                    <input type="text" name="courseName" value={this.state.courseName} onChange={this.handleChange} className="form-control" id="exampleInputEmail1" placeholder="Group Name" />
                 </div>
                 <div className="form-group">
                     <input type="text" name="noMember" value={this.state.noMember} onChange={this.handleChange} className="form-control" id="exampleInputPassword1" placeholder="No. Member" />
@@ -138,11 +138,8 @@ class Add extends Component {
                 <div className="form-group">
                     <input type="text" name="desc" value={this.state.desc} onChange={this.handleChange} className="form-control" id="exampleInputPassword11" placeholder="Description" />
                 </div>
-                <div className="form-group">
-                    <input type="text" name="time" value={this.state.time} onChange={this.handleChange} className="form-control" id="exampleInputPassword1111" placeholder="Time" />
-                </div>
                 <div className="submit">
-                    <button type="submit" className="btn btn-primary">{this.state.id ? 'Edit Book' : 'Add Course'}</button>
+                    <button type="submit" className="btn btn-primary">{this.state.id ? 'Edit Group' : 'Add Group'}</button>
                 </div>
             </form>
         )

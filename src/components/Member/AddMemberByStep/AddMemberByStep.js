@@ -6,6 +6,7 @@ import Service from '../../../Service/service';
 import { compose } from 'redux';
 import { withRouter } from "react-router-dom";
 import LoadingBar from 'react-top-loading-bar';
+import { FaForward, FaBackward } from 'react-icons/fa';
 
 
 class AddMemberByStep extends Component {
@@ -35,6 +36,7 @@ class AddMemberByStep extends Component {
     componentDidMount() {
         const { memberID } = this.props.match.params;
         const { courseID } = this.props.match.params;
+        this.props.saveCourseID(Number(courseID), Number(memberID));
         if (Number(memberID)) {
             Service.getMemberByID(courseID, memberID).then(res => {
                 this.setState({
@@ -350,8 +352,8 @@ class AddMemberByStep extends Component {
                 </div>
                 <div className="add-by-step__actions">
                     <div className="actions">
-                        <button className="btn btn-success" onClick={this.prevStep} disabled={this.state.currentStep === 1}>Prev Step</button>
-                        <button className="btn btn-success" onClick={this.nextStep} disabled={this.state.currentStep === 4}> Next Step</button>
+                        <button className="btn btn-success" onClick={this.prevStep} disabled={this.state.currentStep === 1}><FaBackward /></button>
+                        <button className="btn btn-success" onClick={this.nextStep} disabled={this.state.currentStep === 4}><FaForward /></button>
                     </div>
                     <div className="add">
                         {this.state.currentStep === 4 ? <button className="btn btn-success" disabled={!this.validateAllStep()} onClick={this.omAddMember}>{this.props.memberID ? 'Update Member' : 'Add Member'}</button> : ''}
@@ -384,6 +386,10 @@ const mapDispatchToProps = (dispatch, props) => {
         },
         loadingItem: () => {
             dispatch(courseAction.loadingItem())
+        },
+        saveCourseID: (courseID, memberID) => {
+            dispatch(courseAction.saveCourseID(courseID));
+            dispatch(courseAction.saveMemberID(memberID));
         }
     }
 }

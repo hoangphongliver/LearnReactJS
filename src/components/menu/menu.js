@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import './menu.scss';
 import { compose } from 'redux';
 import { withRouter } from "react-router-dom";
+import { FaHome, FaArrowLeft } from 'react-icons/fa';
 
 class Menu extends Component {
 
@@ -19,26 +20,17 @@ class Menu extends Component {
         this.props.history.push("/");
     }
 
-    componentDidMount() {
-        const  memberID  = this.props.match.params;
-        // this.setState({
-        //     courseID
-        // });
-        console.log(memberID);
-        
-    }
-
-
     back = () => {
-        this.props.history.push(`/viewmember/${this.props.courseID}`);
+        const { courseID } = this.props;
+        this.props.history.push(`/viewmember/${courseID}`);
         this.props.resetPhotoList()
     }
 
     render() {
         return (
             <div className="menu">
-                <div className="menu__logo" onClick={this.goHomePage}>Home</div>
-                <div className="menu__logo menu__about" onClick={this.back}>Back</div>
+                <div className="menu__logo btn btn-info" onClick={this.goHomePage}><FaHome /></div>
+                <div className="menu__logo btn btn-info menu__about" onClick={this.back}><FaArrowLeft /></div>
             </div>
         )
     }

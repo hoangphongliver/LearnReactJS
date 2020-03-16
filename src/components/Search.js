@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as courseAction from '../State/Action';
 import Service from '../Service/service'
 import LoadingBar from 'react-top-loading-bar';
+import { FaSearch } from 'react-icons/fa';
 
 
 class Search extends Component {
@@ -27,21 +28,24 @@ class Search extends Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        this.loadingItem()
         this.setState({
             loadingBarProgress: 0
         });
         const searchPhase = this.state.searchPhase;
-        this.props.onSearchCourse(searchPhase);
-        Service.getAllCousse(1, 10, 'courseName', searchPhase, '', '').then(res => {
-            this.props.onUpdateCourse(res.data);
-            this.setState({
-                loadingBarProgress: 100
-            })
-        });
+        const sortBy = 'lastUpdated';
+        if (searchPhase !== '') {
+            this.loadingItem();
+            this.props.onSearchCourse(searchPhase);
+            Service.getAllCousse(1, 10, sortBy, searchPhase, '', '').then(res => {
+                this.props.onUpdateCourse(res.data);
+                this.setState({
+                    loadingBarProgress: 100
+                })
+            });
+        }
     }
 
-    loadingItem(){
+    loadingItem() {
         this.props.loadingItem();
     }
 
@@ -59,7 +63,7 @@ class Search extends Component {
                     <div className="form-group">
                         <input type="text" value={this.state.searchPhase} name="searchPhase" onChange={this.handleChange} className="form-control" id="123" placeholder="Search Course" />
                     </div>
-                    <Button type="submit">Search</Button>
+                    <Button type="submit"><FaSearch /></Button>
                 </form>
             </div>
         )

@@ -29,11 +29,9 @@ class Home extends Component {
                 isShowForm: true
             })
         } else {
-            setTimeout(() => {
-                this.setState({
-                    isShowForm: false
-                })
-            }, 300);
+            this.setState({
+                isShowForm: false
+            })
         }
     }
 
@@ -48,7 +46,7 @@ class Home extends Component {
                     </div>
                 </div>
                 <div className="right">
-                    <button onClick={this.showForm} className="btn btn btn-info show-form">{this.state.isShowForm ? 'Hide' : 'Show'} Form Add Course</button>
+                    <button onClick={this.showForm} className="btn btn btn-info show-form">{this.state.isShowForm ? 'Hide' : 'Show'} Form Add Group</button>
                     <div className="list-book">
                         <ListCourse key="listCourse"></ListCourse>
                     </div>

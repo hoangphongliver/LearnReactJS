@@ -10,17 +10,18 @@
       display: flex;
       cursor: pointer;
       .status {
-        width: 35px;
-        height: 35px;
+        width: 38px;
+        height: 38px;
         border-radius: 50%;
         background: darkgray;
         margin-right: 10px;
         position: relative;
+        font-weight: bold;
         &::before {
           content: "1";
           position: absolute;
-          left: 10px;
-          top: -3px;
+          left: 11px;
+          top: -1px;
           color: white;
           font-size: 25px;
         }
@@ -54,13 +55,13 @@
         background: #28a745;
         &::before {
           content: "";
-          width: 11px;
-          height: 20px;
+          width: 12px;
+          height: 22px;
           border: solid white;
-          left: 13px;
+          left: 14px;
           top: 5px;
           font-size: 30px;
-          border-width: 0 3px 3px 0;
+          border-width: 0 4px 4px 0;
           transform: rotate(45deg);
         }
       }
@@ -69,9 +70,10 @@
         background: indianred;
         &::before {
           content: "!";
-          left: 13px;
-          top: -6px;
+          left: 14px;
+          top: -5px;
           font-size: 30px;
+          font-weight: bold;
         }
       }
 

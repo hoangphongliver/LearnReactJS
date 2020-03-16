@@ -39,13 +39,16 @@ $mat-grey: (
     }
     td {
       vertical-align: middle;
+      &:last-child {
+        text-align: right;
+      }
     }
     .opc0 {
       opacity: 0;
     }
 
     button {
-      margin-right: 20px;
+      margin-right: 10px;
     }
   }
 
@@ -56,7 +59,7 @@ $mat-grey: (
   .add-member {
     float: right;
     margin-bottom: 10px;
-    button{
+    button {
       margin-right: 20px;
     }
 
